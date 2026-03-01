@@ -121,36 +121,39 @@
 
     <script>
         // 核心邏輯 (加入資料保留機制)
-        let data = JSON.parse(localStorage.getItem('habitProDataV6')) || 
-                   JSON.parse(localStorage.getItem('habitProDataV5')) || 
-                   JSON.parse(localStorage.getItem('habitProDataV4')) || 
-                   {
-                    totalBank: 0,
-                    todayPoints: 0,
-                    themeColor: '#4f46e5',
-                    habits: [
-                        { name: '🚰 喝水 2000CC', pts: 350 },
-                        { name: '📝 多益模擬 800+', pts: 1200 },
-                        { name: '📝 多益模擬 750-799', pts: 900 },
-                        { name: '📝 多益模擬 700-749', pts: 600 },
-                        { name: '📖 多益錯題解析', pts: 250 },
-                        { name: '🗣️ 英文口說 30min', pts: 400 },
-                        { name: '🏃 慢跑 5km', pts: 600 },
-                        { name: '🧘 瑜珈 30min', pts: 300 },
-                        { name: '🏋️ 重訓 1hr', pts: 500 },
-                        { name: '💤 12點前睡', pts: 500 },
-                        { name: '💡 研究創業', pts: 400 },
-                        { name: '📷 研究相機', pts: 400 },
-                        { name: '📈 研究投資', pts: 400 },
-                        { name: '🎬 剪輯影片', pts: 1000 },
-                        { name: '📖 讀 10 頁書', pts: 80 },
-                        { name: '📖 讀 20 頁書', pts: 170 },
-                        { name: '📄 投一份履歷', pts: 1200 }
-                    ],
-                    rewards: [],
-                    history: []
-                   };
+      // 核心邏輯 (修正習慣更新機制)
+        let oldData = JSON.parse(localStorage.getItem('habitProDataV5')) || 
+                      JSON.parse(localStorage.getItem('habitProDataV4')) || 
+                      { totalBank: 0, todayPoints: 0, themeColor: '#4f46e5', history: [] };
 
+        // 這是預設的新習慣列表
+        const defaultHabits = [
+            { name: '🚰 喝水 2000CC', pts: 350 },
+            { name: '📝 多益模擬 800+', pts: 1200 },
+            { name: '📝 多益模擬 750-799', pts: 900 },
+            { name: '📝 多益模擬 700-749', pts: 600 },
+            { name: '📖 多益錯題解析', pts: 250 },
+            { name: '🗣️ 英文口說 30min', pts: 400 },
+            { name: '🏃 慢跑 5km', pts: 600 },
+            { name: '🧘 瑜珈 30min', pts: 300 },
+            { name: '🏋️ 重訓 1hr', pts: 500 },
+            { name: '💤 12點前睡', pts: 500 },
+            { name: '💡 研究創業', pts: 400 },
+            { name: '📷 研究相機', pts: 400 },
+            { name: '📈 研究投資', pts: 400 },
+            { name: '🎬 剪輯影片', pts: 1000 },
+            { name: '📖 讀 10 頁書', pts: 80 },
+            { name: '📖 讀 20 頁書', pts: 170 },
+            { name: '📄 投一份履歷', pts: 1200 }
+        ];
+
+        // 讀取 V6 紀錄，如果沒有，就用舊紀錄加上新習慣
+        let data = JSON.parse(localStorage.getItem('habitProDataV6'));
+        if (!data) {
+            data = oldData;
+            data.habits = defaultHabits; // 強制更新習慣列表
+            data.rewards = data.rewards || [];
+        }
         document.documentElement.style.setProperty('--primary-color', data.themeColor);
         document.getElementById('primaryColor').value = data.themeColor;
 
