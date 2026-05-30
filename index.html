@@ -3,42 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>夢想存摺 V7.6 (實戰平帳版)</title>
+    <title>夢想存摺 V8.0 (總資產升級版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght=400;700;900&display=swap');
         body { font-family: 'Noto Sans TC', sans-serif; }
         .progress-bar { transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .habit-card:active { transform: scale(0.98); }
-        :root { --primary-color: #ef4444; --secondary-color: #059669; }
+        :root { --primary-color: #4f46e5; --secondary-color: #059669; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen pb-24">
 
-    <!-- 頂部面板：動態變色 -->
-    <div id="topPanel" class="sticky top-0 text-white p-6 shadow-2xl z-20 rounded-b-[2.5rem] bg-red-600">
+    <div id="topPanel" class="sticky top-0 text-white p-6 shadow-2xl z-20 rounded-b-[2.5rem] bg-indigo-600">
         <div class="max-w-md mx-auto">
             <div class="flex justify-between items-start">
                 <div>
-                    <p id="bankLabel" class="text-xs opacity-80 mb-1 font-medium tracking-widest">🚨 債務泥潭！尚需償還星星</p>
+                    <p class="text-xs opacity-80 mb-1 font-medium tracking-widest">⭐ 6/1全新出發！可用娛樂星星</p>
                     <div class="flex items-center">
                         <span class="text-xl mr-1 text-yellow-300 font-bold">⭐</span>
-                        <h1 id="totalBank" class="text-4xl font-black tracking-tighter">-4,330</h1>
+                        <h1 id="totalBank" class="text-4xl font-black tracking-tighter">0</h1>
                     </div>
                 </div>
                 <div class="text-right">
-                    <p class="text-xs opacity-80 mb-1 font-medium tracking-widest">今日努力還債</p>
+                    <p class="text-xs opacity-80 mb-1 font-medium tracking-widest">今日賺取</p>
                     <p id="todayPoints" class="text-2xl font-black text-yellow-300">+0</p>
                 </div>
             </div>
             
-            <!-- 這次真的有按鈕區了！ -->
             <div class="flex space-x-2 mt-6">
-                <button onclick="settleDay()" class="flex-1 bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/40 py-2.5 rounded-xl text-xs font-black transition-all active:scale-95">
-                    🌙 結束今日任務
+                <button onclick="settleDay()" class="flex-1 bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/40 py-3 rounded-2xl text-xs font-black transition-all active:scale-95">
+                    🌙 結束今日努力 (結算任務)
                 </button>
-                <button onclick="toggleModal('adjustModal')" class="bg-yellow-400 hover:bg-yellow-500 text-slate-900 px-4 py-2.5 rounded-xl text-xs font-black shadow-md transition-all active:scale-95">
-                    🔧 手動調整星星 (平帳/增債)
+                <button onclick="toggleModal('adjustModal')" class="bg-indigo-800 hover:bg-indigo-900 px-4 py-3 rounded-2xl text-xs font-bold transition-all">
+                    🔧 手動校正星星
                 </button>
             </div>
         </div>
@@ -46,85 +44,104 @@
 
     <div class="max-w-md mx-auto p-5 space-y-10">
         
-        <!-- 📅 跨月連坐預算看板 -->
+        <section class="bg-slate-900 text-white p-6 rounded-[2.5rem] shadow-xl space-y-4 relative overflow-hidden">
+            <div class="absolute right-[-20px] bottom-[-20px] text-slate-800 text-9xl font-black opacity-20">💰</div>
+            <div class="flex justify-between items-center">
+                <h2 class="text-base font-black tracking-wide text-indigo-300">🏦 實體總資產保險庫 (活存+ETF)</h2>
+                <button onclick="toggleModal('assetModal')" class="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">
+                    📝 更新目前總資產
+                </button>
+            </div>
+            <div>
+                <p class="text-xs text-slate-400">當前登記總資產</p>
+                <h3 id="assetDisplay" class="text-3xl font-black tracking-tight text-yellow-400">$368,485</h3>
+            </div>
+            <div id="assetChangeBox" class="bg-white/10 p-3 rounded-xl text-xs flex justify-between items-center font-medium">
+                <span>📊 較上月資產變動：</span>
+                <span id="assetChangeText" class="font-bold text-slate-300">首月建立，尚無變動</span>
+            </div>
+            <p class="text-[10px] text-slate-400">💡 月底更新時，如果總資產比上個月變多，增加的金額會自動按照 10% 轉化成集點卡的驚喜星星喔！</p>
+        </section>
+
         <section class="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-100 space-y-4">
             <div class="flex justify-between items-center">
-                <h2 class="text-lg font-black text-slate-800 flex items-center">💳 預算止損追償看板 <span id="budgetMonthLabel" class="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-md ml-2"></span></h2>
-                <button onclick="toggleModal('expenseModal')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-md hover:bg-emerald-700 transition-colors">
+                <h2 class="text-lg font-black text-slate-800">💳 每月預算控制看板</h2>
+                <button onclick="toggleModal('expenseModal')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-emerald-700">
                     💸 記日常開銷 (免扣點)
                 </button>
             </div>
             
             <div>
                 <div class="flex justify-between text-xs font-bold mb-1">
-                    <span class="text-red-600">🛍️ 娛樂購物額度 (上月超支已自動連坐)</span>
+                    <span class="text-indigo-600">🛍️ 娛樂購物上限 (目標 $4,000)</span>
                     <span id="funBudgetText" class="text-slate-500">$4,000 / $4,000</span>
                 </div>
                 <div class="w-full bg-slate-100 rounded-full h-3">
-                    <div id="funBudgetBar" class="bg-red-500 h-full rounded-full transition-all duration-500" style="width: 100%"></div>
+                    <div id="funBudgetBar" class="bg-indigo-500 h-full rounded-full transition-all" style="width: 100%"></div>
                 </div>
             </div>
 
             <div>
                 <div class="flex justify-between text-xs font-bold mb-1">
-                    <span class="text-emerald-600">🏥 醫療/必要社交 (上限 $5,663)</span>
+                    <span class="text-emerald-600">🏥 醫療/臨時社交彈性金 (上限 $5,663)</span>
                     <span id="saveBudgetText" class="text-slate-500">$5,663 / $5,663</span>
                 </div>
                 <div class="w-full bg-slate-100 rounded-full h-3">
-                    <div id="saveBudgetBar" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 100%"></div>
+                    <div id="saveBudgetBar" class="bg-emerald-500 h-full rounded-full transition-all" style="width: 100%"></div>
                 </div>
             </div>
-
-            <button onclick="settleMonth()" class="w-full bg-slate-900 text-white py-2.5 rounded-xl text-xs font-black tracking-wide hover:bg-slate-800 transition-colors">
-                🏁 月底結算 (剩餘彈性預算強制填補債務)
-            </button>
         </section>
 
-        <!-- 📚 還債任務 -->
         <section>
             <div class="flex justify-between items-center mb-5">
-                <h2 class="text-2xl font-black text-slate-800">🛠️ 勞動還債區 (做任務銷債)</h2>
-                <button onclick="toggleModal('habitModal')" class="bg-slate-800 text-white p-2 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-black text-slate-800">📚 每日自我充實任務</h2>
+                <button onclick="toggleModal('habitModal')" class="bg-indigo-600 text-white p-2 rounded-xl shadow-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg>
                 </button>
             </div>
             <div id="habitList" class="grid grid-cols-1 gap-3"></div>
         </section>
 
-        <!-- 🌌 願望與債務商店 -->
         <section>
             <div class="flex justify-between items-center mb-5">
-                <h2 class="text-2xl font-black text-slate-800">🚨 債務與特赦商店</h2>
+                <h2 class="text-2xl font-black text-slate-800">🌌 夢想解鎖商店</h2>
             </div>
             <div id="rewardList" class="space-y-4"></div>
         </section>
         
-        <!-- 📊 歷史紀錄 -->
         <section class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-            <h2 class="text-xl font-black text-slate-800 mb-4">📊 還款與開銷歷史</h2>
+            <h2 class="text-xl font-black text-slate-800 mb-4">📊 歷史理財日誌</h2>
             <div id="historyList" class="space-y-2 text-sm text-slate-600 font-mono"></div>
         </section>
     </div>
 
-    <!-- 🔧 真正的手動調整視窗 -->
-    <div id="adjustModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 flex items-center justify-center p-6">
+    <div id="assetModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 flex items-center justify-center p-6">
         <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl">
-            <h3 class="text-xl font-black mb-2 text-slate-800">🔧 手動調整星星數量</h3>
-            <p class="text-xs text-slate-500 mb-4">輸入正數增加星星（如 ETF平帳 +12199），輸入負數扣除星星（如 增債 -7869）。</p>
-            <input id="adjAmount" type="number" placeholder="例如: 12199 或 -7869" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-3">
-            <input id="adjNote" type="text" placeholder="調整原因 (例: ETF獲利平帳)" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-6">
+            <h3 class="text-xl font-black mb-2 text-slate-800">🏦 月底結算：更新實體總資產</h3>
+            <p class="text-xs text-slate-500 mb-4">請輸入你目前實體銀行活存 + ETF 市值的加總總額。</p>
+            <input id="newAssetValue" type="number" placeholder="目前當前真實總資產 (如: 368485)" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-6">
             <div class="flex space-x-3">
-                <button onclick="toggleModal('adjustModal')" class="flex-1 bg-slate-200 text-slate-600 py-4 rounded-2xl font-bold">取消</button>
-                <button onclick="executeAdjustment()" class="flex-1 bg-yellow-500 text-slate-950 py-4 rounded-2xl font-bold">確認調整</button>
+                <button onclick="toggleModal('assetModal')" class="flex-1 bg-slate-200 text-slate-600 py-4 rounded-2xl font-bold">取消</button>
+                <button onclick="updateTotalAsset()" class="flex-1 bg-slate-900 text-white py-4 rounded-2xl font-bold">確認登記</button>
             </div>
         </div>
     </div>
 
-    <!-- 其他開銷/習慣視窗 -->
+    <div id="adjustModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 flex items-center justify-center p-6">
+        <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl">
+            <h3 class="text-xl font-black mb-2 text-slate-800">🔧 手動微調星星</h3>
+            <input id="adjAmount" type="number" placeholder="增減數量 (例: 500 或 -200)" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-4">
+            <div class="flex space-x-3">
+                <button onclick="toggleModal('adjustModal')" class="flex-1 bg-slate-200 text-slate-600 py-4 rounded-2xl font-bold">取消</button>
+                <button onclick="executeAdjustment()" class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl font-bold">確定</button>
+            </div>
+        </div>
+    </div>
+
     <div id="expenseModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 flex items-center justify-center p-6">
         <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl">
-            <h3 class="text-xl font-black mb-2 text-slate-800">💸 記一筆必要/臨時開銷</h3>
-            <input id="expName" type="text" placeholder="項目 (例：🏥 看醫生)" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-3">
+            <h3 class="text-xl font-black mb-2 text-slate-800">💸 記一筆日常開銷</h3>
+            <input id="expName" type="text" placeholder="項目 (例：🏥 看醫生、🍕 聚餐)" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-3">
             <input id="expAmount" type="number" placeholder="台幣金額 ($)" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-6">
             <div class="flex space-x-3">
                 <button onclick="toggleModal('expenseModal')" class="flex-1 bg-slate-200 text-slate-600 py-4 rounded-2xl font-bold">取消</button>
@@ -135,214 +152,83 @@
 
     <div id="habitModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 flex items-center justify-center p-6">
         <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl">
-            <h3 class="text-xl font-black mb-4 text-slate-800">新增任務</h3>
-            <input id="newHabitName" type="text" placeholder="名稱" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-3">
-            <input id="newHabitPts" type="number" placeholder="點數" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-6">
+            <h3 class="text-xl font-black mb-4 text-slate-800">新增自訂任務</h3>
+            <input id="newHabitName" type="text" placeholder="任務名稱" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-3">
+            <input id="newHabitPts" type="number" placeholder="獎勵點數" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-6">
             <div class="flex space-x-3">
                 <button onclick="toggleModal('habitModal')" class="flex-1 bg-slate-200 text-slate-600 py-4 rounded-2xl font-bold">取消</button>
-                <button onclick="addItem()" class="flex-1 bg-slate-800 text-white py-4 rounded-2xl font-bold">添加</button>
+                <button onclick="addItem()" class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl font-bold">添加</button>
             </div>
         </div>
     </div>
 
     <script>
         let currentMonthKey = new Date().getFullYear() + '-' + (new Date().getMonth() + 1);
-        let localData = JSON.parse(localStorage.getItem('habitProDataV7'));
         
-        if (!localData) {
-            localData = {
-                totalBank: -4330,
-                todayPoints: 0,
-                themeColor: '#ef4444',
-                currentMonth: currentMonthKey,
-                funBudgetUsed: 4330,
-                saveBudgetUsed: 0,
-                history: [{ date: '🚨 系統初始化', pts: '-4330 ⭐' }],
-                habits: [
-                    { name: '💧 喝水 2000 CC', pts: 10 },
-                    { name: '🧘 瑜珈 30 mins', pts: 20 },
-                    { name: '🌙 12 點前睡覺', pts: 30 },
-                    { name: '🏃‍♂️ 慢跑 5 KM', pts: 50 },
-                    { name: '🗣️ 英文口說 30 mins', pts: 25 },
-                    { name: '📖 多益錯題解析', pts: 25 },
-                    { name: '📝 寫一份多益模擬試題', pts: 60 },
-                    { name: '💡 研究創業/副業', pts: 25 },
-                    { name: '🎬 剪輯影片/研究相機', pts: 40 }
-                ],
-                rewards: [
-                    { name: '🛍️ 奢華香水', pts: 450, exchanged: true },
-                    { name: '🥛 Owala 質感水壺', pts: 1200, exchanged: true },
-                    { name: '👂 🤝 質感耳環', pts: 1280, exchanged: true },
-                    { name: '👗 漂亮衣服', pts: 1400, exchanged: true },
-                    { name: '🌴 峇里島特赦購物金 (上限$5000現金)', pts: 5000, exchanged: false },
-                    { name: '👑 EXO 演唱會門票', pts: 4190, exchanged: false }
-                ]
-            };
-        }
+        // 🚨 6/1 全新斷捨離重啟：初始化強制歸零平帳！
+        let initialData = {
+            totalBank: 0, // 完美歸零開局！
+            todayPoints: 0,
+            currentMonth: currentMonthKey,
+            funBudgetUsed: 0,
+            saveBudgetUsed: 0,
+            lastMonthAsset: 368485, // 鎖定目前5月的資產當基底
+            currentAsset: 368485,
+            history: [{ date: '✨ 6/1 全新斷捨離重啟', pts: '卡費債務與存折完美平帳！' }],
+            habits: [
+                { name: '💧 喝水 2000 CC', pts: 10 },
+                { name: '🧘 瑜珈 30 mins', pts: 20 },
+                { name: '🌙 12 點前睡覺', pts: 30 },
+                { name: '🏃‍♂️ 慢跑 5 KM', pts: 50 },
+                { name: '🗣️ 英文口說 30 mins', pts: 25 },
+                { name: '📖 多益錯題解析', pts: 25 },
+                { name: '📝 寫一份多益模擬試題', pts: 60 }
+            ],
+            rewards: [
+                { name: '🌴 峇里島特赦購物金 (上限$5,000現金)', pts: 1, exchanged: false }, // 為了讓你出國好換，設為1點特赦！
+                { name: '👑 下一趟旅行大基金', pts: 3000, exchanged: false },
+                { name: '🛍️ 新願望清單預留區', pts: 1500, exchanged: false }
+            ]
+        };
 
-        let data = localData;
-
-        // 保證峇里島有出現在獎勵清單中
-        if (!data.rewards.some(r => r.name.includes('峇里島'))) {
-            data.rewards.splice(4, 0, { name: '🌴 峇里島特赦購物金 (上限$5000現金)', pts: 5000, exchanged: false });
-        }
-
-        if (data.currentMonth !== currentMonthKey) {
-            let debtOver = Math.max(0, data.funBudgetUsed - 4000); 
-            data.currentMonth = currentMonthKey;
-            data.saveBudgetUsed = 0;
-            data.funBudgetUsed = debtOver; 
-            data.history.push({ date: `🚨 跨月超支連坐 (${currentMonthKey})`, pts: `額度扣除 $${debtOver}` });
-        }
+        let localData = JSON.parse(localStorage.getItem('habitProDataV8'));
+        let data = localData || initialData;
 
         function saveData() {
-            localStorage.setItem('habitProDataV7', JSON.stringify(data));
+            localStorage.setItem('habitProDataV8', JSON.stringify(data));
             render();
         }
 
         function render() {
             document.getElementById('totalBank').innerText = data.totalBank.toLocaleString();
             document.getElementById('todayPoints').innerText = `+${data.todayPoints}`;
-            document.getElementById('budgetMonthLabel').innerText = data.currentMonth;
+            document.getElementById('assetDisplay').innerText = `$${data.currentAsset.toLocaleString()}`;
 
-            const funLeft = 4000 - data.funBudgetUsed;
-            document.getElementById('funBudgetText').innerText = `$${funLeft.toLocaleString()} / $4,000`;
-            document.getElementById('funBudgetBar').style.width = `${Math.max(0, Math.min(100, (funLeft / 4000) * 100))}%`;
-            
-            if (data.totalBank < 0) {
-                document.getElementById('topPanel').className = "sticky top-0 text-white p-6 shadow-2xl z-20 rounded-b-[2.5rem] bg-red-600";
-                document.getElementById('bankLabel').innerText = "🚨 債務泥潭！尚需償還星星";
+            // 資產變動計算
+            const change = data.currentAsset - data.lastMonthAsset;
+            const changeText = document.getElementById('assetChangeText');
+            if (change > 0) {
+                changeText.innerText = `📈 大賺 +$${change.toLocaleString()}`;
+                changeText.className = "font-bold text-emerald-400";
+            } else if (change < 0) {
+                changeText.innerText = `📉 縮水 -$${Math.abs(change).toLocaleString()}`;
+                changeText.className = "font-bold text-red-400";
             } else {
-                document.getElementById('topPanel').className = "sticky top-0 text-white p-6 shadow-2xl z-20 rounded-b-[2.5rem] bg-emerald-600";
-                document.getElementById('bankLabel').innerText = "⭐ 債務結清！可用娛樂星星";
+                changeText.innerText = "持平穩定中";
+                changeText.className = "font-bold text-slate-300";
             }
+
+            const funLeft = Math.max(0, 4000 - data.funBudgetUsed);
+            document.getElementById('funBudgetText').innerText = `$${funLeft.toLocaleString()} / $4,000`;
+            document.getElementById('funBudgetBar').style.width = `${(funLeft / 4000) * 100}%`;
 
             const saveLeft = Math.max(0, 5663 - data.saveBudgetUsed);
             document.getElementById('saveBudgetText').innerText = `$${saveLeft.toLocaleString()} / $5,663`;
             document.getElementById('saveBudgetBar').style.width = `${(saveLeft / 5663) * 100}%`;
 
-            const hList = document.getElementById('habitList');
-            hList.innerHTML = data.habits.map((h, i) => `
+            // 任務清單
+            document.getElementById('habitList').innerHTML = data.habits.map((h, i) => `
                 <div class="flex items-center space-x-2">
                     <div onclick="addDailyPoints(${h.pts})" class="habit-card flex-1 flex justify-between items-center bg-white p-5 rounded-[1.5rem] shadow-sm border-b-4 border-slate-200 active:border-b-0 transition-all cursor-pointer">
                         <span class="font-bold text-slate-700">${h.name}</span>
-                        <span class="font-black text-red-500 tracking-tighter">還債 +${h.pts}</span>
-                    </div>
-                    <button onclick="deleteItem('habit', ${i})" class="bg-slate-200 text-slate-400 p-4 rounded-2xl text-sm">✕</button>
-                </div>
-            `).join('');
-
-            const rList = document.getElementById('rewardList');
-            rList.innerHTML = data.rewards.map((r, i) => {
-                if (r.exchanged) {
-                    return `
-                        <div class="bg-red-50 border border-red-200 p-5 rounded-[2rem] flex justify-between items-center opacity-70">
-                            <div>
-                                <span class="font-black text-red-800 text-base block">💸 已提前透支：${r.name}</span>
-                                <span class="text-xs text-red-500 font-bold">代價：-${r.pts} 星星 </span>
-                            </div>
-                            <span class="bg-red-200 text-red-800 text-xs px-3 py-1 rounded-xl font-black">已記帳</span>
-                        </div>
-                    `;
-                } else {
-                    const isReady = data.totalBank >= r.pts && data.totalBank > 0;
-                    return `
-                        <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
-                            <div class="flex justify-between items-center">
-                                <span class="font-black text-slate-800 text-lg block">${r.name}</span>
-                                <span class="text-xs font-bold text-slate-400">${r.pts} ⭐</span>
-                            </div>
-                            ${isReady ? `
-                                <button onclick="exchange(${i})" class="w-full mt-4 bg-emerald-600 text-white py-3 rounded-2xl font-black">🎁 兌換</button>
-                            ` : `<button class="w-full mt-4 bg-slate-100 text-slate-400 py-3 rounded-2xl text-xs font-bold cursor-not-allowed" disabled>❌ 星星為負數或不足，解鎖失敗</button>`}
-                        </div>
-                    `;
-                }
-            }).join('');
-
-            const histList = document.getElementById('historyList');
-            histList.innerHTML = data.history.slice(-12).reverse().map(h => `
-                <div class="flex justify-between border-b border-slate-100 py-1">
-                    <span>${h.date}</span>
-                    <span class="font-bold ${h.pts.toString().includes('-') ? 'text-red-500' : 'text-emerald-600'}">${h.pts}</span>
-                </div>
-            `).join('');
-        }
-
-        // 🔧 執行手動調整邏輯
-        function executeAdjustment() {
-            const amount = parseInt(document.getElementById('adjAmount').value);
-            const note = document.getElementById('adjNote').value || '手動調整';
-            if(isNaN(amount)) return alert("請輸入有效的數字！");
-            
-            data.totalBank += amount;
-            data.history.push({ 
-                date: `🔧 ${note}`, 
-                pts: `${amount >= 0 ? '+' : ''}${amount} ⭐` 
-            });
-            
-            document.getElementById('adjAmount').value = '';
-            document.getElementById('adjNote').value = '';
-            toggleModal('adjustModal');
-            saveData();
-        }
-
-        function addDailyPoints(pts) { data.todayPoints += pts; saveData(); }
-
-        function settleDay() {
-            if(data.todayPoints === 0) return alert("今天還沒還債喔！");
-            data.totalBank += data.todayPoints;
-            data.history.push({ date: '🛠️ 還債：' + new Date().toLocaleDateString(), pts: `+${data.todayPoints} ⭐` });
-            data.todayPoints = 0;
-            saveData();
-        }
-
-        function addExpense() {
-            const name = document.getElementById('expName').value;
-            const amount = parseInt(document.getElementById('expAmount').value);
-            if(!name || !amount) return alert("請輸入完整資訊");
-            data.saveBudgetUsed += amount;
-            data.history.push({ date: `💸 日常：${name}`, pts: `-$${amount}` });
-            document.getElementById('expName').value = ''; document.getElementById('expAmount').value = '';
-            toggleModal('expenseModal'); saveData();
-        }
-
-        function settleMonth() {
-            const saveLeft = 5663 - data.saveBudgetUsed;
-            if(saveLeft <= 0) return alert("沒有剩餘彈性預算。");
-            if(confirm(`🏁 確定結算？\n剩餘的 $${saveLeft} 彈性預算將強制注入還債！`)) {
-                data.totalBank += saveLeft;
-                data.history.push({ date: `🏁 月底結算強制還債`, pts: `+${saveLeft} ⭐` });
-                data.saveBudgetUsed = 5663; 
-                saveData();
-            }
-        }
-
-        function exchange(index) {
-            const reward = data.rewards[index];
-            if (data.totalBank < reward.pts) return alert("星星不夠！");
-            data.totalBank -= reward.pts;
-            data.funBudgetUsed += reward.pts;
-            reward.exchanged = true;
-            saveData();
-        }
-
-        function addItem() {
-            const name = document.getElementById('newHabitName').value;
-            const pts = parseInt(document.getElementById('newHabitPts').value);
-            if(!name || !pts) return;
-            data.habits.push({ name, pts });
-            toggleModal('habitModal'); saveData();
-        }
-
-        function deleteItem(type, index) {
-            data[type === 'habit' ? 'habits' : 'rewards'].splice(index, 1);
-            saveData();
-        }
-
-        function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
-
-        saveData();
-    </script>
-</body>
-</html>
+                        <span class="font-black text-indigo
