@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>夢想存摺 V8.0 (總資產升級版)</title>
+    <title>夢想存摺 V8.1 (完全體修復版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght=400;700;900&display=swap');
         body { font-family: 'Noto Sans TC', sans-serif; }
         .progress-bar { transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .habit-card:active { transform: scale(0.98); }
-        :root { --primary-color: #4f46e5; --secondary-color: #059669; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen pb-24">
 
+    <!-- 頂部面板 -->
     <div id="topPanel" class="sticky top-0 text-white p-6 shadow-2xl z-20 rounded-b-[2.5rem] bg-indigo-600">
         <div class="max-w-md mx-auto">
             <div class="flex justify-between items-start">
@@ -44,6 +44,7 @@
 
     <div class="max-w-md mx-auto p-5 space-y-10">
         
+        <!-- 🏦 實體總資產保險庫 -->
         <section class="bg-slate-900 text-white p-6 rounded-[2.5rem] shadow-xl space-y-4 relative overflow-hidden">
             <div class="absolute right-[-20px] bottom-[-20px] text-slate-800 text-9xl font-black opacity-20">💰</div>
             <div class="flex justify-between items-center">
@@ -60,9 +61,10 @@
                 <span>📊 較上月資產變動：</span>
                 <span id="assetChangeText" class="font-bold text-slate-300">首月建立，尚無變動</span>
             </div>
-            <p class="text-[10px] text-slate-400">💡 月底更新時，如果總資產比上個月變多，增加的金額會自動按照 10% 轉化成集點卡的驚喜星星喔！</p>
+            <p class="text-[10px] text-slate-400">💡 月底更新時，如果總資產變多，增加金額的 10% 會自動化為驚喜星星送給你！</p>
         </section>
 
+        <!-- 📅 每月日常預算看板 -->
         <section class="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-100 space-y-4">
             <div class="flex justify-between items-center">
                 <h2 class="text-lg font-black text-slate-800">💳 每月預算控制看板</h2>
@@ -92,6 +94,7 @@
             </div>
         </section>
 
+        <!-- 📚 任務區 -->
         <section>
             <div class="flex justify-between items-center mb-5">
                 <h2 class="text-2xl font-black text-slate-800">📚 每日自我充實任務</h2>
@@ -102,23 +105,29 @@
             <div id="habitList" class="grid grid-cols-1 gap-3"></div>
         </section>
 
+        <!-- 🌌 願望商店 -->
         <section>
             <div class="flex justify-between items-center mb-5">
                 <h2 class="text-2xl font-black text-slate-800">🌌 夢想解鎖商店</h2>
+                <!-- 🛒 這次幫你補上商店的新增按鈕了！ -->
+                <button onclick="toggleModal('rewardModal')" class="bg-indigo-600 text-white p-2 rounded-xl shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg>
+                </button>
             </div>
             <div id="rewardList" class="space-y-4"></div>
         </section>
         
+        <!-- 📊 歷史紀錄 -->
         <section class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100">
             <h2 class="text-xl font-black text-slate-800 mb-4">📊 歷史理財日誌</h2>
             <div id="historyList" class="space-y-2 text-sm text-slate-600 font-mono"></div>
         </section>
     </div>
 
+    <!-- 1. 更新總資產彈窗 -->
     <div id="assetModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 flex items-center justify-center p-6">
         <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl">
             <h3 class="text-xl font-black mb-2 text-slate-800">🏦 月底結算：更新實體總資產</h3>
-            <p class="text-xs text-slate-500 mb-4">請輸入你目前實體銀行活存 + ETF 市值的加總總額。</p>
             <input id="newAssetValue" type="number" placeholder="目前當前真實總資產 (如: 368485)" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-6">
             <div class="flex space-x-3">
                 <button onclick="toggleModal('assetModal')" class="flex-1 bg-slate-200 text-slate-600 py-4 rounded-2xl font-bold">取消</button>
@@ -127,6 +136,7 @@
         </div>
     </div>
 
+    <!-- 2. 手動調整星星彈窗 -->
     <div id="adjustModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 flex items-center justify-center p-6">
         <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl">
             <h3 class="text-xl font-black mb-2 text-slate-800">🔧 手動微調星星</h3>
@@ -138,10 +148,11 @@
         </div>
     </div>
 
+    <!-- 3. 記開銷彈窗 -->
     <div id="expenseModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 flex items-center justify-center p-6">
         <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl">
             <h3 class="text-xl font-black mb-2 text-slate-800">💸 記一筆日常開銷</h3>
-            <input id="expName" type="text" placeholder="項目 (例：🏥 看醫生、🍕 聚餐)" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-3">
+            <input id="expName" type="text" placeholder="項目 (例：🏥 看醫生)" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-3">
             <input id="expAmount" type="number" placeholder="台幣金額 ($)" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-6">
             <div class="flex space-x-3">
                 <button onclick="toggleModal('expenseModal')" class="flex-1 bg-slate-200 text-slate-600 py-4 rounded-2xl font-bold">取消</button>
@@ -150,14 +161,28 @@
         </div>
     </div>
 
+    <!-- 4. 新增任務彈窗 -->
     <div id="habitModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 flex items-center justify-center p-6">
         <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl">
-            <h3 class="text-xl font-black mb-4 text-slate-800">新增自訂任務</h3>
+            <h3 class="text-xl font-black mb-4 text-slate-800">新增充實任務</h3>
             <input id="newHabitName" type="text" placeholder="任務名稱" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-3">
             <input id="newHabitPts" type="number" placeholder="獎勵點數" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-6">
             <div class="flex space-x-3">
                 <button onclick="toggleModal('habitModal')" class="flex-1 bg-slate-200 text-slate-600 py-4 rounded-2xl font-bold">取消</button>
-                <button onclick="addItem()" class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl font-bold">添加</button>
+                <button onclick="addHabitItem()" class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl font-bold">添加任務</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. 新增商店商品彈窗 -->
+    <div id="rewardModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 flex items-center justify-center p-6">
+        <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl">
+            <h3 class="text-xl font-black mb-4 text-slate-800">🛍️ 上架新的夢想願望</h3>
+            <input id="newRewardName" type="text" placeholder="願望商品名稱" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-3">
+            <input id="newRewardPts" type="number" placeholder="需要解鎖的星星數" class="w-full bg-slate-100 border-none p-4 rounded-2xl mb-6">
+            <div class="flex space-x-3">
+                <button onclick="toggleModal('rewardModal')" class="flex-1 bg-slate-200 text-slate-600 py-4 rounded-2xl font-bold">取消</button>
+                <button onclick="addRewardItem()" class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl font-bold">上架願望</button>
             </div>
         </div>
     </div>
@@ -165,16 +190,16 @@
     <script>
         let currentMonthKey = new Date().getFullYear() + '-' + (new Date().getMonth() + 1);
         
-        // 🚨 6/1 全新斷捨離重啟：初始化強制歸零平帳！
+        // 🚨 補齊所有你原先的核心習慣
         let initialData = {
-            totalBank: 0, // 完美歸零開局！
+            totalBank: 0,
             todayPoints: 0,
             currentMonth: currentMonthKey,
             funBudgetUsed: 0,
             saveBudgetUsed: 0,
-            lastMonthAsset: 368485, // 鎖定目前5月的資產當基底
+            lastMonthAsset: 368485,
             currentAsset: 368485,
-            history: [{ date: '✨ 6/1 全新斷捨離重啟', pts: '卡費債務與存折完美平帳！' }],
+            history: [{ date: '✨ V8.1 完美修復重啟', pts: '核心習慣全部回歸！' }],
             habits: [
                 { name: '💧 喝水 2000 CC', pts: 10 },
                 { name: '🧘 瑜珈 30 mins', pts: 20 },
@@ -182,20 +207,22 @@
                 { name: '🏃‍♂️ 慢跑 5 KM', pts: 50 },
                 { name: '🗣️ 英文口說 30 mins', pts: 25 },
                 { name: '📖 多益錯題解析', pts: 25 },
-                { name: '📝 寫一份多益模擬試題', pts: 60 }
+                { name: '📝 寫一份多益模擬試題', pts: 60 },
+                { name: '💡 研究創業/副業', pts: 25 },
+                { name: '🎬 剪輯影片/研究相機', pts: 40 }
             ],
             rewards: [
-                { name: '🌴 峇里島特赦購物金 (上限$5,000現金)', pts: 1, exchanged: false }, // 為了讓你出國好換，設為1點特赦！
+                { name: '🌴 峇里島特赦購物金 (上限$5,000現金)', pts: 1, exchanged: false },
                 { name: '👑 下一趟旅行大基金', pts: 3000, exchanged: false },
                 { name: '🛍️ 新願望清單預留區', pts: 1500, exchanged: false }
             ]
         };
 
-        let localData = JSON.parse(localStorage.getItem('habitProDataV8'));
-        let data = localData || initialData;
+        // 為避免髒數據衝突，這次直接從全新數據開展，或是讀取舊的
+        let data = JSON.parse(localStorage.getItem('habitProDataV8_1')) || initialData;
 
         function saveData() {
-            localStorage.setItem('habitProDataV8', JSON.stringify(data));
+            localStorage.setItem('habitProDataV8_1', JSON.stringify(data));
             render();
         }
 
@@ -204,7 +231,6 @@
             document.getElementById('todayPoints').innerText = `+${data.todayPoints}`;
             document.getElementById('assetDisplay').innerText = `$${data.currentAsset.toLocaleString()}`;
 
-            // 資產變動計算
             const change = data.currentAsset - data.lastMonthAsset;
             const changeText = document.getElementById('assetChangeText');
             if (change > 0) {
@@ -226,9 +252,127 @@
             document.getElementById('saveBudgetText').innerText = `$${saveLeft.toLocaleString()} / $5,663`;
             document.getElementById('saveBudgetBar').style.width = `${(saveLeft / 5663) * 100}%`;
 
-            // 任務清單
+            // 渲染任務清單（帶刪除）
             document.getElementById('habitList').innerHTML = data.habits.map((h, i) => `
                 <div class="flex items-center space-x-2">
                     <div onclick="addDailyPoints(${h.pts})" class="habit-card flex-1 flex justify-between items-center bg-white p-5 rounded-[1.5rem] shadow-sm border-b-4 border-slate-200 active:border-b-0 transition-all cursor-pointer">
                         <span class="font-bold text-slate-700">${h.name}</span>
-                        <span class="font-black text-indigo
+                        <span class="font-black text-indigo-600 tracking-tighter">+${h.pts} ⭐</span>
+                    </div>
+                    <button onclick="deleteHabitItem(${i})" class="bg-slate-200 hover:bg-red-100 text-slate-400 hover:text-red-500 p-4 rounded-2xl text-sm transition-colors">✕</button>
+                </div>
+            `).join('');
+
+            // 渲染商店（帶刪除與兌換）
+            document.getElementById('rewardList').innerHTML = data.rewards.map((r, i) => {
+                if (r.exchanged) {
+                    return `<div class="bg-indigo-50 text-indigo-800 p-5 rounded-[2rem] font-black text-center opacity-60 flex justify-between items-center"><span>✅ 已解鎖：${r.name}</span><button onclick="deleteRewardItem(${i})" class="text-slate-400 text-xs">刪除</button></div>`;
+                }
+                const isReady = data.totalBank >= r.pts;
+                return `
+                    <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 flex justify-between items-center space-x-2">
+                        <div class="flex-1">
+                            <span class="font-black text-slate-800 block">${r.name}</span>
+                            <span class="text-xs text-slate-400 font-bold">花費: ${r.pts} 顆星星</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            ${isReady ? `<button onclick="exchange(${i})" class="bg-emerald-600 text-white px-4 py-2 rounded-xl font-black text-sm">兌換</button>` : `<button class="bg-slate-100 text-slate-400 px-4 py-2 rounded-xl text-xs font-bold cursor-not-allowed" disabled>未達標</button>`}
+                            <button onclick="deleteRewardItem(${i})" class="bg-slate-100 hover:bg-red-50 text-slate-400 hover:text-red-500 px-3 py-2 rounded-xl text-xs font-bold">✕</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // 歷史紀錄
+            document.getElementById('historyList').innerHTML = data.history.slice(-10).reverse().map(h => `
+                <div class="flex justify-between border-b border-slate-100 py-1 font-medium">
+                    <span>${h.date}</span>
+                    <span class="font-bold text-slate-700">${h.pts}</span>
+                </div>
+            `).join('');
+        }
+
+        function updateTotalAsset() {
+            const val = parseInt(document.getElementById('newAssetValue').value);
+            if(isNaN(val)) return alert("請輸入正確的資產數字！");
+            const oldAsset = data.currentAsset;
+            data.lastMonthAsset = oldAsset;
+            data.currentAsset = val;
+            const diff = val - oldAsset;
+            if (diff > 0) {
+                const bonusStars = Math.floor(diff * 0.1);
+                data.totalBank += bonusStars;
+                data.history.push({ date: '🏦 資產分紅', pts: `+${bonusStars} ⭐` });
+                alert(`🎉 總資產增加了 $${diff.toLocaleString()}！拿走 10% 點數：+${bonusStars} ⭐！`);
+            } else {
+                data.history.push({ date: '🏦 登記總資產', pts: `$${val.toLocaleString()}` });
+            }
+            toggleModal('assetModal'); document.getElementById('newAssetValue').value = ''; saveData();
+        }
+
+        function addDailyPoints(pts) { data.todayPoints += pts; saveData(); }
+        function settleDay() {
+            if(data.todayPoints === 0) return alert("今天還沒累積任務喔！");
+            data.totalBank += data.todayPoints;
+            data.history.push({ date: '🌟 任務：' + new Date().toLocaleDateString(), pts: `+${data.todayPoints} ⭐` });
+            data.todayPoints = 0;
+            saveData();
+        }
+
+        function executeAdjustment() {
+            const amount = parseInt(document.getElementById('adjAmount').value);
+            if(isNaN(amount)) return;
+            data.totalBank += amount;
+            data.history.push({ date: '🔧 手動微調', pts: `${amount >= 0 ? '+' : ''}${amount} ⭐` });
+            toggleModal('adjustModal'); document.getElementById('adjAmount').value = ''; saveData();
+        }
+
+        function addExpense() {
+            const name = document.getElementById('expName').value;
+            const amount = parseInt(document.getElementById('expAmount').value);
+            if(!name || !amount) return;
+            data.saveBudgetUsed += amount;
+            data.history.push({ date: `💸 日常：${name}`, pts: `-$${amount}` });
+            toggleModal('expenseModal'); document.getElementById('expName').value = ''; document.getElementById('expAmount').value = ''; saveData();
+        }
+
+        function exchange(index) {
+            data.totalBank -= data.rewards[index].pts;
+            data.funBudgetUsed += data.rewards[index].pts;
+            data.rewards[index].exchanged = true;
+            data.history.push({ date: `🎁 解鎖：${data.rewards[index].name}`, pts: `-${data.rewards[index].pts} ⭐` });
+            saveData();
+        }
+
+        // ➕ 正確添加任務邏輯
+        function addHabitItem() {
+            const name = document.getElementById('newHabitName').value;
+            const pts = parseInt(document.getElementById('newHabitPts').value);
+            if(!name || isNaN(pts)) return alert("請填入完整資訊！");
+            data.habits.push({ name, pts });
+            document.getElementById('newHabitName').value = '';
+            document.getElementById('newHabitPts').value = '';
+            toggleModal('habitModal');
+            saveData();
+        }
+
+        // ➕ 正確添加商品邏輯
+        function addRewardItem() {
+            const name = document.getElementById('newRewardName').value;
+            const pts = parseInt(document.getElementById('newRewardPts').value);
+            if(!name || isNaN(pts)) return alert("請填入完整資訊！");
+            data.rewards.push({ name, pts, exchanged: false });
+            document.getElementById('newRewardName').value = '';
+            document.getElementById('newRewardPts').value = '';
+            toggleModal('rewardModal');
+            saveData();
+        }
+
+        function deleteHabitItem(index) { data.habits.splice(index, 1); saveData(); }
+        function deleteRewardItem(index) { data.rewards.splice(index, 1); saveData(); }
+        function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
+
+        saveData();
+    </script>
+</body>
+</html>
