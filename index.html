@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>夢想存摺 V8.4.1 (防走失安全版)</title>
+    <title>夢想存摺 V8.4.2 (終極復活版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght=400;700;900&display=swap');
@@ -34,7 +34,7 @@
             </div>
             
             <div class="flex space-x-2 mt-6">
-                <button onclick="settleDay()" id="btnSettle" class="flex-1 theme-bg text-white py-3 rounded-2xl text-xs font-black transition-all active:scale-95 shadow-lg">
+                <button onclick="settleDay()" id="btnSettle" class="flex-1 bg-indigo-600 text-white py-3 rounded-2xl text-xs font-black transition-all active:scale-95 shadow-lg">
                     🌙 結束今日努力 (結算任務)
                 </button>
                 <button onclick="toggleModal('adjustModal')" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 px-4 py-3 rounded-2xl text-xs font-bold transition-all">
@@ -55,108 +55,3 @@
                 </button>
             </div>
             <div>
-                <p class="text-[11px] text-zinc-500">當前登記總資產</p>
-                <h3 id="assetDisplay" class="text-3xl font-black tracking-tight text-yellow-500">$368,485</h3>
-            </div>
-            <div id="assetChangeBox" class="bg-zinc-800/50 p-3 rounded-xl text-xs flex justify-between items-center font-medium border border-zinc-800">
-                <span class="text-zinc-400">📊 較上月資產變動：</span>
-                <span id="assetChangeText" class="font-bold text-zinc-300">首月建立，尚無變動</span>
-            </div>
-        </section>
-
-        <section class="bg-zinc-900 p-6 rounded-[2rem] shadow-sm border border-zinc-800 space-y-5">
-            <div class="flex justify-between items-center">
-                <h2 class="text-base font-black text-zinc-200 tracking-wide">💳 每月預算控制看板</h2>
-                <button onclick="toggleModal('expenseModal')" class="bg-zinc-800 hover:bg-zinc-700 theme-accent-text border border-zinc-700 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">
-                    💸 記日常開銷
-                </button>
-            </div>
-            
-            <div class="space-y-1.5">
-                <div class="flex justify-between text-xs font-bold">
-                    <span class="theme-text">🛍️ 娛樂購物上限 (目標 $4,000)</span>
-                    <span id="funBudgetText" class="text-zinc-400">$4,000 / $4,000</span>
-                </div>
-                <div class="w-full bg-zinc-800 rounded-full h-2.5 overflow-hidden">
-                    <div id="funBudgetBar" class="theme-bg h-full rounded-full transition-all" style="width: 100%"></div>
-                </div>
-            </div>
-
-            <div class="space-y-1.5">
-                <div class="flex justify-between text-xs font-bold">
-                    <span class="theme-accent-text">🏥 醫療/臨時社交彈性金 (上限 $5,663)</span>
-                    <span id="saveBudgetText" class="text-zinc-400">$5,663 / $5,663</span>
-                </div>
-                <div class="w-full bg-zinc-800 rounded-full h-2.5 overflow-hidden">
-                    <div id="saveBudgetBar" class="theme-accent-bg h-full rounded-full transition-all" style="width: 100%"></div>
-                </div>
-            </div>
-        </section>
-
-        <section class="space-y-4">
-            <div class="flex justify-between items-center">
-                <h2 class="text-xl font-black text-zinc-200 tracking-tight">📚 每日自我充實任務</h2>
-                <button onclick="toggleModal('habitModal')" class="bg-zinc-900 border border-zinc-800 text-zinc-300 hover:bg-zinc-800 p-2 rounded-xl shadow-lg transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg>
-                </button>
-            </div>
-            <div id="habitList" class="grid grid-cols-1 gap-3"></div>
-        </section>
-
-        <section class="space-y-4">
-            <div class="flex justify-between items-center">
-                <h2 class="text-xl font-black text-zinc-200 tracking-tight">🌌 夢想解鎖商店</h2>
-                <button onclick="toggleModal('rewardModal')" class="bg-zinc-900 border border-zinc-800 text-zinc-300 hover:bg-zinc-800 p-2 rounded-xl shadow-lg transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" /></svg>
-                </button>
-            </div>
-            <div id="rewardList" class="space-y-3"></div>
-        </section>
-        
-        <section class="bg-zinc-900 p-6 rounded-[2rem] shadow-sm border border-zinc-800">
-            <h2 class="text-base font-black text-zinc-300 mb-3 tracking-wide">📊 歷史理財日誌</h2>
-            <div id="historyList" class="space-y-2 text-xs text-zinc-400 font-mono"></div>
-        </section>
-    </div>
-
-    <div class="fixed bottom-4 left-4 right-4 z-30 bg-zinc-900/90 backdrop-blur-md border border-zinc-800 p-3 rounded-2xl max-w-md mx-auto shadow-2xl">
-        <p class="text-center text-[10px] text-zinc-500 font-bold tracking-widest mb-2 uppercase">🎨 點擊切換個性主題色彩</p>
-        <div class="flex justify-around items-center">
-            <button onclick="changeTheme('default')" class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-emerald-500 border-2 border-zinc-700 active:scale-90 transition-transform" title="極致黑灰"></button>
-            <button onclick="changeTheme('slateBlue')" class="w-8 h-8 rounded-full bg-gradient-to-br from-slate-400 to-blue-500 border-2 border-zinc-700 active:scale-90 transition-transform" title="冰川灰藍"></button>
-            <button onclick="changeTheme('forest')" class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-600 to-teal-700 border-2 border-zinc-700 active:scale-90 transition-transform" title="特工墨綠"></button>
-            <button onclick="changeTheme('cyber')" class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 border-2 border-zinc-700 active:scale-90 transition-transform" title="霓虹紫"></button>
-            <button onclick="changeTheme('racing')" class="w-8 h-8 rounded-full bg-gradient-to-br from-red-600 to-zinc-700 border-2 border-zinc-700 active:scale-90 transition-transform" title="極速紅"></button>
-        </div>
-    </div>
-
-    <div id="assetModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-30 flex items-center justify-center p-6">
-        <div class="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-8 w-full max-w-sm shadow-2xl text-zinc-100">
-            <h3 class="text-lg font-black mb-2">🏦 月底結算：更新實體總資產</h3>
-            <input id="newAssetValue" type="number" placeholder="目前當前真實總資產" class="w-full bg-zinc-800 border-none p-4 rounded-2xl mb-6 text-zinc-100 outline-none">
-            <div class="flex space-x-3">
-                <button onclick="toggleModal('assetModal')" class="flex-1 bg-zinc-800 text-zinc-400 py-4 rounded-2xl font-bold">取消</button>
-                <button onclick="updateTotalAsset()" id="btnAssetConfirm" class="flex-1 theme-bg text-white py-4 rounded-2xl font-bold">確認登記</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="adjustModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-30 flex items-center justify-center p-6">
-        <div class="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-8 w-full max-w-sm shadow-2xl text-zinc-100">
-            <h3 class="text-lg font-black mb-2">🔧 手動微調星星</h3>
-            <input id="adjAmount" type="number" placeholder="增減數量" class="w-full bg-zinc-800 border-none p-4 rounded-2xl mb-4 text-zinc-100 outline-none">
-            <div class="flex space-x-3">
-                <button onclick="toggleModal('adjustModal')" class="flex-1 bg-zinc-800 text-zinc-400 py-4 rounded-2xl font-bold">取消</button>
-                <button onclick="executeAdjustment()" id="btnAdjConfirm" class="flex-1 theme-bg text-white py-4 rounded-2xl font-bold">確定</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="expenseModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-30 flex items-center justify-center p-6">
-        <div class="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-8 w-full max-w-sm shadow-2xl text-zinc-100">
-            <h3 class="text-lg font-black mb-2">💸 記一筆日常開銷</h3>
-            <input id="expName" type="text" placeholder="項目 (例：🏥 看醫生)" class="w-full bg-zinc-800 border-none p-4 rounded-2xl mb-3 text-zinc-100 outline-none">
-            <input id="expAmount" type="number" placeholder="台幣金額 ($)" class="w-full bg-zinc-800 border-none p-4 rounded-2xl mb-6 text-zinc-100 outline-none">
-            <div class="flex space-x-3">
-                <button onclick="toggleModal('expenseModal')" class="flex-1 bg-zinc-800 text-zinc-400 py-4 rounded-2xl font-bold">取消</button>
-                <button onclick="addExpense()" id="btnExpConfirm" class="flex-1 theme-accent-bg text-white py-4 rounded-2xl font-bold">記帳</button>
